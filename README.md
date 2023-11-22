@@ -13,6 +13,7 @@ flutter pub get
 Start application using 
 ```bash 
 flutter run
+```
 
 A new Flutter project.
 
