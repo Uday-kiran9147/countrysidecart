@@ -128,8 +128,12 @@ class _HomeScreenState extends State<HomeScreen> {
               'From my location',
               style: TextStyle(color: Colors.orange),
             )),
-        leading:
-            Center(child: Text('Home', style: TextStyle(color: Colors.green))),
+        leading: Center(
+          child: Text.rich(TextSpan(children: [
+            TextSpan(text: 'Community\n', style: TextStyle(color: Colors.white,fontSize: 18)),
+            TextSpan(text: 'Home', style: TextStyle(color: Colors.green))
+          ])),
+        ),
         leadingWidth: 150,
         actions: [
           IconButton(
@@ -153,7 +157,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ? Center(
                     child: LinearProgressIndicator(),
                   )
-                :Container(),
+                : Container(),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextField(
@@ -205,32 +209,39 @@ class _HomeScreenState extends State<HomeScreen> {
                           .contains(search.toLowerCase()))
                       .toList();
                   return searchlist.length > 0
-                      ? ListView(
-                          shrinkWrap: true,
-                          children: searchlist.map((e) {
-                            Business bussiness1 = Business.fromMap(e);
-                            return Card(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  ListTile(
-                                    titleAlignment: ListTileTitleAlignment.top,
-                                    title: Text(bussiness1.businessName),
-                                    subtitle: Text(bussiness1.location),
+                      ? Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: ListView(
+                            shrinkWrap: true,
+                            children: searchlist.map((e) {
+                              Business bussiness1 = Business.fromMap(e);
+                              return Padding(
+                                padding: const EdgeInsets.all(3.0),
+                                child: Container(
+                                  decoration: BoxDecoration(border: Border.all(width: 1/2,color: Colors.orange),borderRadius: BorderRadius.all(Radius.circular(10))),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      ListTile(
+                                        titleAlignment: ListTileTitleAlignment.top,
+                                        title: Text(bussiness1.businessName),
+                                        subtitle: Text('location: '+bussiness1.location),trailing: Icon(Icons.location_on,color: Colors.green.shade200,),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 8.0),
+                                        child: Text(" Contact: " +
+                                            " " +
+                                            bussiness1
+                                                .contactInformation.phoneNumber),
+                                      )
+                                    ],
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8.0),
-                                    child: Text("Contact: " +
-                                        " " +
-                                        bussiness1
-                                            .contactInformation.phoneNumber),
-                                  )
-                                ],
-                              ),
-                            );
-                          }).toList())
+                                ),
+                              );
+                            }).toList()),
+                      )
                       : Center(
                           child: Text('No Bussiness Found'),
                         );

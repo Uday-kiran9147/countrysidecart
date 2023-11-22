@@ -36,7 +36,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final user_businessId = userSnapshot['bussinessId'];
     DocumentSnapshot bussinessSnapshot =
         await bussinessCollection.doc(user_businessId).get();
-    var bussiness_Id='';
+    var bussiness_Id = '';
     setState(() {
       businessAccount = bussinessSnapshot;
       user_bid = user_businessId;
@@ -60,7 +60,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return hasbusiness
         ? Scaffold(
             appBar: AppBar(
-              title: Text('at ${businessAccount!['location']}'),
+              title: Row(
+                children: [
+                  Text('at ${businessAccount!['location']}'),
+                  Icon(
+                    Icons.location_on,
+                    color: Colors.green.shade200,
+                  ),
+                ],
+              ),
               backgroundColor: Colors.transparent,
               actions: [
                 IconButton(
@@ -68,13 +76,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     await storeProduct(
                             ProductService(
                                 productId: uuid.v1(),
-                                productName: 'flavoured Cake',
-                                price: 109),
+                                productName: 'Red-velvet',
+                                price: 19),
                             user_bid)
                         .then((value) {
                       Fluttertoast.showToast(
                           msg: 'Product added successfully',
                           toastLength: Toast.LENGTH_LONG);
+                      setState(() {});
                     }).catchError((err) => {
                               Fluttertoast.showToast(
                                   msg: err.toString(),
@@ -104,12 +113,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             .copyWith(color: Color.fromARGB(255, 206, 160, 69)),
                         textAlign: TextAlign.end,
                       ),
-                      Text(
-                        businessAccount!['location'],
-                        style: Theme.of(context)
-                            .textTheme
-                            .headlineSmall!
-                            .copyWith(color: Colors.grey),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text(
+                            businessAccount!['location'],
+                            style: Theme.of(context)
+                                .textTheme
+                                .headlineSmall!
+                                .copyWith(color: Colors.grey),
+                          ),
+                          Icon(
+                            Icons.location_on,
+                            color: Colors.green.shade200,
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -125,7 +143,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             subtitleTextStyle: TextStyle(color: Colors.green),
                             title: Text(product.productName),
                             subtitle: Text(
-                              product.price.toString(),
+                              '\$ ' + product.price.toString(),
                             ),
                           );
                         }).toList(),
