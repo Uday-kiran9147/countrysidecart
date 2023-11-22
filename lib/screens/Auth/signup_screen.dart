@@ -132,68 +132,83 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       waitingforlocation
                           ? const LinearProgressIndicator()
                           : Container(),
-                      TextFormField(
-                        controller: _usernameController,
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          labelText: 'Username',
-                          hintText: 'Enter your username',
-                          icon: Icon(Icons
-                              .person), // Optional: Icon to represent the field
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextFormField(
+                          controller: _usernameController,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            labelText: 'Username',
+                            hintText: 'Enter your username',
+                            icon: Icon(Icons
+                                .person), // Optional: Icon to represent the field
+                          ),
                         ),
                       ),
-                      TextFormField(
-                        controller: _contactsController,
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-
-                          labelText: 'contact',
-                          hintText: 'Enter your contact info',
-                          icon: Icon(Icons
-                              .call), // Optional: Icon to represent the field
-                        ),
-                      ),
-                      SizedBox(height: 16), // Add some spacing between fields
-                      TextFormField(
-                        controller: _emailController,
-                        keyboardType: TextInputType
-                            .emailAddress, // Set keyboard type for email
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-
-                          labelText: 'Email',
-                          hintText: 'Enter your email address',
-                          icon: Icon(Icons
-                              .email), // Optional: Icon to represent the field
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextFormField(
+                          controller: _contactsController,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                      
+                            labelText: 'contact',
+                            hintText: 'Enter your contact info',
+                            icon: Icon(Icons
+                                .call), // Optional: Icon to represent the field
+                          ),
                         ),
                       ),
                       SizedBox(height: 16), // Add some spacing between fields
-                      TextFormField(
-                        controller: _passwordController,obscureText: true,
-
-                        // keyboardType:
-                        //     TextInputType.emailAddress, // Set keyboard type for email
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-
-                          labelText: 'password',
-                          hintText: 'Enter your password',
-                          icon: Icon(Icons
-                              .email), // Optional: Icon to represent the field
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextFormField(
+                          controller: _emailController,
+                          keyboardType: TextInputType
+                              .emailAddress, // Set keyboard type for email
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                      
+                            labelText: 'Email',
+                            hintText: 'Enter your email address',
+                            icon: Icon(Icons
+                                .email), // Optional: Icon to represent the field
+                          ),
                         ),
                       ),
                       SizedBox(height: 16), // Add some spacing between fields
-                      TextFormField(
-                        controller: _locationController,
-                        keyboardType: TextInputType
-                            .emailAddress, // Set keyboard type for email
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-
-                          labelText: 'Location',
-                          hintText: 'Enter your location',
-                          icon: Icon(Icons
-                              .email), // Optional: Icon to represent the field
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextFormField(
+                          controller: _passwordController,obscureText: true,
+                      
+                          // keyboardType:
+                          //     TextInputType.emailAddress, // Set keyboard type for email
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                      
+                            labelText: 'password',
+                            hintText: 'Enter your password',
+                            icon: Icon(Icons
+                                .password_rounded), // Optional: Icon to represent the field
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 16), // Add some spacing between fields
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextFormField(
+                          controller: _locationController,
+                          keyboardType: TextInputType
+                              .emailAddress, // Set keyboard type for email
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                      
+                            labelText: 'Location',
+                            hintText: 'Enter your location',
+                            icon: Icon(Icons
+                                .location_on_outlined), // Optional: Icon to represent the field
+                          ),
                         ),
                       ),
                       Row(
@@ -228,7 +243,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     builder: (context) => Home()));
                           });
                         },
-                        child: Text("register"),
+                        child: Text("Register"),
                       ),
                       TextButton(
                           onPressed: () {
@@ -238,7 +253,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   builder: (context) => LoginScreen(),
                                 ));
                           },
-                          child: Text('login'))
+                          child: Text('Login'))
                     ],
                   ),
                 ),
