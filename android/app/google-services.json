@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "487215407688",
+    "project_id": "first-firebase-d5e0d",
+    "storage_bucket": "first-firebase-d5e0d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:487215407688:android:f6af4670cd37523302ee7d",
+        "android_client_info": {
+          "package_name": "com.example.countrysidecart"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "487215407688-k4jctn2u164e4hjefh66ede5aaqultc1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAtZ1mGtHGTAXLqvxsaeuhMLHJKLfaeXgs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "487215407688-k4jctn2u164e4hjefh66ede5aaqultc1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
