@@ -1,13 +1,12 @@
-// create login screen that has emali and password fields
+import 'package:flutter/material.dart';
 import 'package:countrysidecart/screens/Auth/signup_screen.dart';
 import 'package:countrysidecart/screens/home.dart';
-import 'package:flutter/material.dart';
-
 import '../../database/auth.dart';
 
 class LoginScreen extends StatelessWidget {
-  TextEditingController _emailController = new TextEditingController();
-  TextEditingController _passwordontroller = new TextEditingController();
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,45 +18,87 @@ class LoginScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            TextField(
+            _buildTextField(
               controller: _emailController,
-              decoration: InputDecoration(
-                labelText: 'Email',
-              ),
+              labelText: 'Email',
+              icon: Icons.email,
+              keyboardType: TextInputType.emailAddress,
             ),
             SizedBox(height: 16.0),
-            TextField(
+            _buildTextField(
+              controller: _passwordController,
+              labelText: 'Password',
+              icon: Icons.lock,
               obscureText: true,
-              controller: _passwordontroller,
-              decoration: InputDecoration(
-                labelText: 'Password',
-              ),
             ),
             SizedBox(height: 16.0),
-            ElevatedButton(
+            _buildButton(
               onPressed: () async {
                 await signInWithEmailAndPassword(
                   _emailController.text,
-                  _passwordontroller.text,
+                  _passwordController.text,
                 ).then((val) {
                   if (val) {
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (context) => Home()));
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => Home()),
+                    );
                   }
                 });
               },
-              child: Text('Login'),
+              label: 'Login',
+              color: Colors.blue,
             ),
             TextButton(
-                onPressed: () {
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => SignUpScreen(),
-                      ));
-                },
-                child: Text('signup'))
+              onPressed: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SignUpScreen(),
+                  ),
+                );
+              },
+              child: Text('Sign Up'),
+            ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String labelText,
+    required IconData icon,
+    bool obscureText = false,
+    TextInputType? keyboardType,
+  }) {
+    return TextField(
+      controller: controller,
+      obscureText: obscureText,
+      keyboardType: keyboardType,
+      decoration: InputDecoration(
+        labelText: labelText,
+        prefixIcon: Icon(icon),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12.0),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildButton({
+    required VoidCallback onPressed,
+    required String label,
+    required Color color,
+  }) {
+    return ElevatedButton(
+      onPressed: onPressed,
+      child: Text(label),
+      style: ElevatedButton.styleFrom(
+        primary: color,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.0),
         ),
       ),
     );

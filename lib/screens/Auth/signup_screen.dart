@@ -27,6 +27,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
   String? fulladdress;
   bool isloading = false;
 
+  late FocusNode _locationFocusNode;
+
+  @override
+  void initState() {
+    super.initState();
+    _locationFocusNode = FocusNode();
+  }
+
+  @override
+  void dispose() {
+    _locationFocusNode.dispose();
+    super.dispose();
+  }
+
   // Function gets the List of addresses from the latitude and longitude
   Future<List<Placemark>> getaddressfromlatlong(Position position) async {
     /* 
@@ -118,147 +132,149 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Form(
-          child: Center(
-            child: SingleChildScrollView(
+    return Scaffold(
+      body: Center(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(18.0),
+            child: Card(
+              elevation: 8.0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16.0),
+              ),
               child: Padding(
-                padding: const EdgeInsets.all(18.0),
-                child: Card(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      waitingforlocation
-                          ? const LinearProgressIndicator()
-                          : Container(),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: TextFormField(
-                          controller: _usernameController,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            labelText: 'Username',
-                            hintText: 'Enter your username',
-                            icon: Icon(Icons
-                                .person), // Optional: Icon to represent the field
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: TextFormField(
-                          controller: _contactsController,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                      
-                            labelText: 'contact',
-                            hintText: 'Enter your contact info',
-                            icon: Icon(Icons
-                                .call), // Optional: Icon to represent the field
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 16), // Add some spacing between fields
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: TextFormField(
-                          controller: _emailController,
-                          keyboardType: TextInputType
-                              .emailAddress, // Set keyboard type for email
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                      
-                            labelText: 'Email',
-                            hintText: 'Enter your email address',
-                            icon: Icon(Icons
-                                .email), // Optional: Icon to represent the field
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 16), // Add some spacing between fields
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: TextFormField(
-                          controller: _passwordController,obscureText: true,
-                      
-                          // keyboardType:
-                          //     TextInputType.emailAddress, // Set keyboard type for email
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                      
-                            labelText: 'password',
-                            hintText: 'Enter your password',
-                            icon: Icon(Icons
-                                .password_rounded), // Optional: Icon to represent the field
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 16), // Add some spacing between fields
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: TextFormField(
-                          controller: _locationController,
-                          keyboardType: TextInputType
-                              .emailAddress, // Set keyboard type for email
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                      
-                            labelText: 'Location',
-                            hintText: 'Enter your location',
-                            icon: Icon(Icons
-                                .location_on_outlined), // Optional: Icon to represent the field
-                          ),
-                        ),
-                      ),
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.location_on_outlined,
-                            color: Colors.orange,
-                          ),
-                          TextButton(
-                              onPressed: () async {
-                                await getCurrentPosition().whenComplete(() {
-                                  setState(() {
-                                    _locationController.text = fulladdress!;
-                                  });
-                                });
-                              },
-                              child: const Text("get current location")),
-                        ],
-                      ),
-                      TextButton(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    if (waitingforlocation) LinearProgressIndicator(),
+                    _buildTextField(
+                      controller: _usernameController,
+                      labelText: 'Username',
+                      hintText: 'Enter your username',
+                      icon: Icons.person,
+                    ),
+                    _buildTextField(
+                      controller: _contactsController,
+                      labelText: 'Contact',
+                      hintText: 'Enter your contact info',
+                      icon: Icons.call,
+                    ),
+                    _buildTextField(
+                      controller: _emailController,
+                      labelText: 'Email',
+                      hintText: 'Enter your email address',
+                      icon: Icons.email,
+                    ),
+                    _buildTextField(
+                      controller: _passwordController,
+                      labelText: 'Password',
+                      hintText: 'Enter your password',
+                      icon: Icons.lock,
+                      obscureText: true,
+                    ),
+                    _buildTextField(
+                      controller: _locationController,
+                      labelText: 'Location',
+                      hintText: 'Enter your location',
+                      icon: Icons.location_on_outlined,
+                      // enabled: false,
+                      suffixIcon: IconButton(
+                        icon: Icon(Icons.location_searching),
                         onPressed: () async {
-                          await registerWithEmailAndPassword(
-                                  _emailController.text,
-                                  _passwordController.text,
-                                  _usernameController.text,
-                                  _locationController.text,
-                                  _contactsController.text)
-                              .then((value) {
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Home()));
+                          await getCurrentPosition().whenComplete(() {
+                            FocusScope.of(context)
+                                .requestFocus(_locationFocusNode);
+                            setState(() {
+                              _locationController.text = fulladdress!;
+                              // get focusnode
+                            });
                           });
                         },
-                        child: Text("Register"),
                       ),
-                      TextButton(
-                          onPressed: () {
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => LoginScreen(),
-                                ));
-                          },
-                          child: Text('Login'))
-                    ],
-                  ),
+                    ),
+                    _buildButton(
+                      onPressed: () async {
+                        await registerWithEmailAndPassword(
+                          _emailController.text,
+                          _passwordController.text,
+                          _usernameController.text,
+                          _locationController.text,
+                          _contactsController.text,
+                        ).then((value) {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) => Home()),
+                          );
+                        });
+                      },
+                      label: 'Register',
+                      color: Colors.blue,
+                    ),
+                    _buildButton(
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => LoginScreen(),
+                          ),
+                        );
+                      },
+                      label: 'Login',
+                      color: Colors.grey,
+                    ),
+                  ],
                 ),
               ),
             ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String labelText,
+    required String hintText,
+    required IconData icon,
+    bool obscureText = false,
+    bool enabled = true,
+    Widget? suffixIcon,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: TextField(
+        controller: controller,
+        obscureText: obscureText,
+        enabled: enabled,
+        decoration: InputDecoration(
+          labelText: labelText,
+          hintText: hintText,
+          prefixIcon: Icon(icon),
+          suffixIcon: suffixIcon,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12.0),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildButton({
+    required VoidCallback onPressed,
+    required String label,
+    required Color color,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: ElevatedButton(
+        onPressed: onPressed,
+        child: Text(label),
+        style: ElevatedButton.styleFrom(
+          primary: color,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12.0),
           ),
         ),
       ),
