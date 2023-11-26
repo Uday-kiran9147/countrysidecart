@@ -1,4 +1,7 @@
+import 'package:countrysidecart/screens/Auth/login.dart';
 import 'package:countrysidecart/screens/Auth/signup_screen.dart';
+import 'package:countrysidecart/screens/home.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -43,13 +46,21 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Countryside Cart',
-      theme: ThemeData(
-        brightness: Brightness.dark,
-        primarySwatch: Colors.blue,
-      ),
-      home: SignUpScreen(),
-    );
+        debugShowCheckedModeBanner: false,
+        title: 'Countryside Cart',
+        theme: ThemeData(
+          brightness: Brightness.dark,
+          primarySwatch: Colors.cyan,
+        ),
+        home: StreamBuilder(
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return LoginScreen();
+            }
+
+            return const Home();
+          },
+        ));
   }
 }

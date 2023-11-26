@@ -22,6 +22,19 @@ class _HomeScreenState extends State<HomeScreen> {
   String? address;
   String? fulladdress;
   bool isloading = false;
+  late FocusNode _locationFocusNode;
+
+  @override
+  void initState() {
+    super.initState();
+    _locationFocusNode = FocusNode();
+  }
+
+  @override
+  void dispose() {
+    _locationFocusNode.dispose();
+    super.dispose();
+  }
 
   // Function gets the List of addresses from the latitude and longitude
   Future<List<Placemark>> getaddressfromlatlong(Position position) async {
@@ -68,8 +81,8 @@ class _HomeScreenState extends State<HomeScreen> {
       setState(() {
         _currentPosition =
             position; // Assigns the current position to _currentPosition variable
-        getaddressfromlatlong(_currentPosition!);
-        waitingforlocation = false;
+        getaddressfromlatlong(_currentPosition!)
+            .whenComplete(() => waitingforlocation = false);
       });
     });
   }
@@ -119,10 +132,16 @@ class _HomeScreenState extends State<HomeScreen> {
         titleSpacing: 8,
         title: TextButton(
             onPressed: () async {
-              await getCurrentPosition().whenComplete(() => setState(() {
-                    searchQuery.text = address!;
-                    search = address!;
-                  }));
+              await getCurrentPosition().whenComplete(() {
+                FocusScope.of(context).requestFocus(_locationFocusNode);
+                search = address!;
+
+                setState(() {
+                  searchQuery.text = address!;
+
+                  // get focusnode
+                });
+              });
             },
             child: Text(
               'From my location',
@@ -130,7 +149,9 @@ class _HomeScreenState extends State<HomeScreen> {
             )),
         leading: Center(
           child: Text.rich(TextSpan(children: [
-            TextSpan(text: 'Community\n', style: TextStyle(color: Colors.white,fontSize: 18)),
+            TextSpan(
+                text: 'Community\n',
+                style: TextStyle(color: Colors.white, fontSize: 22)),
             TextSpan(text: 'Home', style: TextStyle(color: Colors.green))
           ])),
         ),
@@ -160,13 +181,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 : Container(),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: TextField(
+              child: TextFormField(
                 onChanged: (val) {
                   setState(() {
                     search = val;
                   });
                 },
                 controller: searchQuery,
+                focusNode: _locationFocusNode,
                 decoration: InputDecoration(
                   hintText: "Search location...",
                   hintStyle: TextStyle(color: Colors.grey.shade600),
@@ -209,39 +231,52 @@ class _HomeScreenState extends State<HomeScreen> {
                           .contains(search.toLowerCase()))
                       .toList();
                   return searchlist.length > 0
-                      ? Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: ListView(
-                            shrinkWrap: true,
-                            children: searchlist.map((e) {
-                              Business bussiness1 = Business.fromMap(e);
-                              return Padding(
-                                padding: const EdgeInsets.all(3.0),
-                                child: Container(
-                                  decoration: BoxDecoration(border: Border.all(width: 1/2,color: Colors.orange),borderRadius: BorderRadius.all(Radius.circular(10))),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      ListTile(
-                                        titleAlignment: ListTileTitleAlignment.top,
-                                        title: Text(bussiness1.businessName),
-                                        subtitle: Text('location: '+bussiness1.location),trailing: Icon(Icons.location_on,color: Colors.green.shade200,),
+                      ? ListView(
+                          padding: EdgeInsets.symmetric(horizontal: 8),
+                          shrinkWrap: true,
+                          children: searchlist.map((e) {
+                            Business bussiness1 = Business.fromMap(e);
+                            return Padding(
+                              padding: const EdgeInsets.all(3.0),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    border: Border.all(
+                                        width: 1,
+                                        color:
+                                            Theme.of(context).primaryColorDark),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10))),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    ListTile(
+                                      title: Text(bussiness1.businessName),
+                                      subtitle: Text(
+                                          'Location: ' + bussiness1.location,
+                                          style: TextStyle(
+                                            color: Colors.orange,
+                                          )),
+                                      trailing: Icon(
+                                        Icons.location_on,
+                                        color: Colors.red,
                                       ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 8.0),
-                                        child: Text(" Contact: " +
-                                            " " +
-                                            bussiness1
-                                                .contactInformation.phoneNumber),
-                                      )
-                                    ],
-                                  ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 15,
+                                          bottom: 8.0),
+                                      child: Text("Contact: " +
+                                          " " +
+                                          bussiness1
+                                              .contactInformation.phoneNumber),
+                                    )
+                                  ],
                                 ),
-                              );
-                            }).toList()),
-                      )
+                              ),
+                            );
+                          }).toList())
                       : Center(
                           child: Text('No Bussiness Found'),
                         );

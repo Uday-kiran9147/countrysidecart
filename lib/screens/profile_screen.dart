@@ -76,7 +76,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     await storeProduct(
                             ProductService(
                                 productId: uuid.v1(),
-                                productName: 'Red-velvet',
+                                productName: 'Berry fruit',
                                 price: 19),
                             user_bid)
                         .then((value) {
